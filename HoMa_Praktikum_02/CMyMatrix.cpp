@@ -2,6 +2,7 @@
 #include <cassert>
 #include "CMyMatrix.h"
 #include "CMyVektor.h"
+#include <iomanip>
 
 void CMyMatrix::pushLinie(std::vector<double> newmatrixlinie)//um eine leere matrix einzufullen
 {
@@ -104,17 +105,16 @@ void CMyMatrix::print()
 
 void CMyMatrix::schoen_print()
 {
-	std::cout.precision(5);
 	for (int i = 0; i < linie; i++)
 	{
 		std::cout << "| ";
 		for (int j = 0; j < spalte; j++)
 		{
-			std::cout.width(7);
-			std::cout << matrix[i][j];
+			std::cout.width(8);
+			std::cout << std::setprecision(5) << matrix[i][j];
 			if (j +1 == spalte)//if die lätzte spalte
 			{
-				std::cout << "  ";
+				std::cout << " ";
 			}
 			else
 			{
