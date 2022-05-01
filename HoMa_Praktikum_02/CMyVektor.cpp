@@ -61,7 +61,7 @@ void CMyVektor::add_zu_vektor_werte(int pos, double wert)//addieren zu angefragt
 	vektor_werte[pos] += wert;
 }
 
-double CMyVektor::lenght()//return die Leange des Vektors mithilfe des Pisogars
+double CMyVektor::lenght()//return die Leange des Vektors mithilfe des Pisogars 
 {
 	if (dimension == 1)
 	{

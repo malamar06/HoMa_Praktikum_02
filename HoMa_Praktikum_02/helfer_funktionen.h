@@ -2,6 +2,24 @@
 #include "CMyVektor.h"
 #include "CMyMatrix.h"
 
+CMyVektor newtonVerfahren2dim(CMyVektor startpunkt, CMyVektor(*funktion)(CMyVektor x));
+
+CMyVektor testFunktion6(CMyVektor x);
+
+void G_verfahren_mini_staticlambda(CMyVektor x, double (*funktion)(CMyVektor y), double lambda);
+
+CMyMatrix jacobi(CMyVektor x, CMyVektor(*funktion)(CMyVektor x));
+
+CMyVektor operator*(CMyMatrix A, CMyVektor B);
+
+double testFunktion5(CMyVektor x);
+
+double testFunktion4(CMyVektor x);
+
+CMyVektor operator - (CMyVektor a, CMyVektor b);
+
+void G_verfahren_mini(CMyVektor x, double (*funktion)(CMyVektor y), double lambda);
+
 CMyVektor testFunktion3(double x1, double x2, double x3, double x4);
 
 CMyVektor operator*(CMyMatrix A, CMyVektor B);

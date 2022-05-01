@@ -7,7 +7,7 @@ class CMyVektor //class fur mathematische Vektor stellung
 {
 private:
 	int dimension = 0;
-	std::vector<double> vektor_werte;
+	std::vector<double> vektor_werte; 
 
 public:
 	CMyVektor();

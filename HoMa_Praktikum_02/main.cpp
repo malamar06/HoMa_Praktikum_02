@@ -2,13 +2,16 @@
 #include "CMyVektor.h"
 #include "helfer_funktionen.h"
 #include "CMyMatrix.h"
-#include "assert.h"
+#include <vector>
 
 
 int main()
 {
-	testFunktion3(1, 2, 0, 3).print();
+	CMyVektor control(1, 1);
+
+	newtonVerfahren2dim(control, testFunktion6);
+	
 
 
 	return 0;
-}
+} 
