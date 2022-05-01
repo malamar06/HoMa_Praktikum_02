@@ -2,8 +2,237 @@
 #include "CMyVektor.h"
 #include "CMyMatrix.h"
 #include <cassert>
+#include "helfer_funktionen.h"
+
 using namespace std;
-//Can Sana Kafam Girsin
+
+//Es waere schoen, ein printinfo funktion zu haben, damit man sauber funktionen haben, dass nicht zu viel cout zeilen gibt.!!!
+
+CMyVektor testFunktion6(CMyVektor x)//f(x, y) = { x^3*y^3 - 2y ; x - 2 } Praktikum02 Aufgabe 3 test funktion
+{
+	CMyVektor rErgebnis(0, 0);
+	rErgebnis.set_vektor_werte(0, x[0] * x[0] * x[0] * x[1] * x[1] * x[1] - 2 * x[1]); // x^3*y^3 - 2y
+	rErgebnis.set_vektor_werte(1, x[0] - 2);
+	return rErgebnis;
+}
+
+//newton verfahren funktion
+CMyVektor newtonVerfahren2dim(CMyVektor startpunkt, CMyVektor (*funktion)(CMyVektor x))//Newtonverfahren zur Bestummung einer Nullstelle
+{
+	cout << "Das Newtonverfahren von dem Startpunkt: ";
+	startpunkt.print();
+	CMyVektor aktuelpunkt = startpunkt;
+	CMyVektor deltaX;
+	for (int schritt = 0; schritt < 50; schritt++)//Maximal 50 Schritt
+	{
+		//Hier alle funktionen anrufen, damit sie nur einmal angerufen aber mehrfach genutzt werden.
+		CMyMatrix aktuelJacobi = jacobi(aktuelpunkt, funktion);
+		CMyMatrix JacobiInverse = aktuelJacobi.invers_2x2();
+		CMyVektor aktuelfunktionx = funktion(aktuelpunkt);
+		double aktuel_lenght = funktion(aktuelpunkt).lenght();
+		
+		if (aktuel_lenght < 0.00001)//Ist es genug Nah?
+		{
+			cout << "====================== MAGIC ======================" << endl;
+			cout << "Ende wegen ||f(x)|| < 10^-5 bei" << endl;
+			cout << "x = ";
+			aktuelpunkt.print();
+			cout << endl << "f(x) = ";
+			aktuelfunktionx.print();
+			cout << "||f(x)|| = " << aktuel_lenght << endl;
+			return aktuelpunkt;
+		}
+		
+		cout << "====================== Schritt " << schritt << " ======================" << endl << endl;
+		cout << "x = ";
+		aktuelpunkt.print();
+		cout << "f(x) = ";
+		aktuelfunktionx.print();
+		cout << endl << "f'(x) = Jacobi Matrix " << endl;
+		aktuelJacobi.schoen_print();
+		cout << endl << "[f'(x)]^(-1) = Jacobi Matrix Inverse " << endl;
+		JacobiInverse.schoen_print();
+		deltaX = -1 * ( JacobiInverse * aktuelfunktionx);// DeltaX = -f(x) * gradf(x)^-1
+		cout << endl << "delta x = ";
+		deltaX.print();
+		cout << "||f(x)|| = " << aktuel_lenght << endl << endl;
+		
+		aktuelpunkt = aktuelpunkt + deltaX;
+
+
+	}
+}
+
+
+CMyMatrix jacobi(CMyVektor x, CMyVektor(*funktion)(CMyVektor x))
+{
+	// F(x): R^n -> R^m
+	CMyVektor funk_X_erg_vektor = funktion(x);
+	int rMatrixLinie = funk_X_erg_vektor.get_dim();//m
+	int rMatrixSpalte = x.get_dim();//n
+	double h = 0.0001;
+	CMyMatrix rMatrix;// return matrix initilisieren
+	for (int i = 0; i < rMatrixLinie; i++)//mutter schleife fur matrix linie 
+	{
+		vector<double> jacobiLinie;//transporter vektor um das Matrix einzubauen
+
+		for (int j = 0; j < rMatrixSpalte; j++)//schleife fur eine spalte einer linie der matrix
+		{
+			double transporter = 0;
+			CMyVektor x1 = x;
+			x1.add_zu_vektor_werte(j, h);//f(x + h)
+			transporter = (funktion(x1)[i] - funktion(x)[i]) / h;//ableitung formal mit H!
+			jacobiLinie.push_back(transporter);
+		}
+		rMatrix.pushLinie(jacobiLinie);
+	}
+	return rMatrix;
+}
+
+double testFunktion5(CMyVektor x)
+{
+	assert(x.get_dim() == 3);
+	double rErgebnis = 0;
+	rErgebnis += 2 * x[0] * x[0];
+	rErgebnis += -2 * x[0] * x[1];
+	rErgebnis += x[1] * x[1];
+	rErgebnis += x[2] * x[2];
+	rErgebnis += -2 * x[0];
+	rErgebnis += -4 * x[2];
+	return rErgebnis;
+}
+
+double testFunktion4(CMyVektor x)
+{
+	assert(x.get_dim() == 2);
+	double rErgebnis = 0;
+	rErgebnis += x[0] * x[0] * x[0] * x[0];
+	rErgebnis += 2 * x[1] * x[1];
+	rErgebnis -= 4 * x[0] * x[1];
+	return rErgebnis;
+}
+
+CMyVektor operator - (CMyVektor a, CMyVektor b)
+{
+	int dim_a = a.get_dim();
+	int dim_b = b.get_dim();
+	assert(dim_a == dim_b);
+	CMyVektor summe;
+	for (int i = 0; i < dim_a; i++)
+	{
+		summe.manual_push(a[i] - b[i]);
+	}
+	return summe;
+}
+
+void G_verfahren_mini_staticlambda(CMyVektor x, double (*funktion)(CMyVektor y), double lambda)
+{
+	CMyVektor aktuelpunk = x;
+	//CMyVektor testpunkt;
+	while (aktuelpunk.lenght() > 0.00001)
+	{
+		aktuelpunk.print();
+		aktuelpunk = aktuelpunk - (lambda * gradient(aktuelpunk, funktion));
+		aktuelpunk.print();
+		system("pause");
+	}
+	return;
+}
+
+
+void G_verfahren_mini(CMyVektor x, double (*funktion)(CMyVektor y), double lambda)
+{
+	std::cout << "Gradient Verfahren zu Minimierung:" << std::endl;
+	CMyVektor aktuelPunkt = x;
+	CMyVektor testPunkt;
+	CMyVektor gradVektor;
+	double funk_x;
+	double funk_xtest;
+	for (int schritt = 0; schritt < 25; schritt++)//maximum 25 Schritt
+	{
+		funk_x = funktion(aktuelPunkt);
+		gradVektor = gradient(aktuelPunkt, funktion);
+		if (aktuelPunkt.lenght() < 0.00001)
+		{
+			cout << endl << "==============================================";
+			cout << endl << "Ende wegen ||grad f(x)||<1e-5 bei" << endl;
+			cout << "x = ";
+			aktuelPunkt.print();
+			cout << endl << "lambda = " << lambda << endl;
+			cout << "f(x) = " << funk_x << endl;
+			cout << "grad f(x) = ";
+			gradVektor.print();
+			cout << "||grad f(x)|| = " << gradVektor.lenght() << endl;
+		}
+		testPunkt = aktuelPunkt - (lambda * gradVektor);//test punkt rechnen, gardient verfahren zur minimierung
+		funk_xtest = funktion(testPunkt);
+		cout << endl << "==============================================" << "Schritt " << schritt << " :" << endl;
+		cout << "x = ";
+		aktuelPunkt.print();
+		cout << "Lambda = " << lambda << endl;
+		cout << "f(x) = " << funk_x << endl;
+		cout << "grad f(x) = ";
+		gradVektor.print();
+		cout << "||grad f(x)|| = " << gradVektor.lenght() << endl;
+		cout << endl << "x_neu = ";
+		testPunkt.print();
+		cout << "f(x_neu) = " << funk_xtest << endl;
+		if (funk_xtest >= funk_x)
+		{
+			while (funk_xtest >= funk_x) // lambda halbieren, zu weit gegangen
+			{
+				gradVektor = gradient(testPunkt, funktion);
+				lambda *= 0.5;
+				testPunkt = testPunkt - (lambda * gradVektor);
+				cout << endl << "Halbiere Schrittweite: lambda = " << lambda << endl;
+				cout << "x_neu = ";
+				testPunkt.print();
+				cout << "f(x_neu) = " << funk_xtest << endl;
+				funk_xtest = funktion(testPunkt);
+
+			}
+			aktuelPunkt = testPunkt; //Korrek Wert gefunden
+		}
+		else
+		{
+			//wenn wir in Korrekte Richtung (gradient) wie Lambda Weit gehen und gewuenchte Ergebnis( f(x_neu) > f(x) ) bekommen,
+			//probieren wir die dasselbe operation mit Lambda*2 zu machen. Weil wir wissen mochten, ob wir in diesem Schritt mehr machen koennen. 
+			lambda = lambda * 2;
+			cout << endl << "Test mit doppelter Schrittweite (lambda = " << lambda << "):" << endl;
+			CMyVektor transporter = aktuelPunkt - (lambda * gradVektor);//nochmal mit verdoppelte Lambda rechnen
+			
+			cout << "x_test = ";
+			transporter.print();
+			cout << "f(x_test) = " << funktion(transporter) << endl;
+			//kann ich doppel leange gehen ?
+			if (funktion(transporter) < funk_x)//Ja, ich kann mit verdoppelte Lambda
+			{
+				aktuelPunkt = transporter;
+				cout << "verdoppele Schrittweite!";
+			}
+			else								   //Nein, ich kann nicht mit verdoppelte Lambda
+			{
+				aktuelPunkt = testPunkt;
+				cout << "behalte alte Schrittweite!";
+			}
+		}
+		
+	}
+	//Wenn das Program an dieser Linie kommt, die Schleife ist voll durchgegangen und das gewunchte neahe nicht gefunden.
+		//Enden wir der Verfharen hier, nachdem 25 schritte gerechnet wurde. Einfach die info printen und das funktion beenden.
+	cout << endl << "==============================================" << endl;
+	cout << "Ende wegen Schrittanzahl = 25 bei" << endl;
+	cout << "x = ";
+	aktuelPunkt.print();
+	cout << endl << "lambda = " << lambda << endl;
+	cout << "f(x) = " << funktion(aktuelPunkt) << endl;
+	cout << "grad f(x) = ";
+	gradient(aktuelPunkt, funktion).print();
+	cout << "||grad f(x)|| = " << gradient(aktuelPunkt, funktion).lenght() << endl;
+	cout << "==============================================" << endl;
+	return;
+}
+
 
 CMyVektor testFunktion3(double x1, double x2, double x3, double x4)
 {
