@@ -6,3 +6,4 @@ Der Gradient dieser Funktionen rechnen.
 Gradient Verfahren.
 Mathematische Matrix Class fur Berechnungen der mehr dimensionalen Funktionen.
 Funktionen fur Jacobi-Matrix Berechnungen.
+Newton Verfahren um einen Nullstelle zu berechnen.
