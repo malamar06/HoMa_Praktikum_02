@@ -9,6 +9,11 @@ private:
 	int spalte;
 	std::vector<std::vector<double>> matrix;
 public:
+
+	void schoen_print();
+
+	void pushLinie(std::vector<double> newmatrixlinie);
+
 	std::vector<double> operator[](int pos);
 
 	int get_spalte();
@@ -23,7 +28,7 @@ public:
 
 	double matrix_getter(int linie_pos, int spalte_pos);
 
-	CMyMatrix invers_2x2();//learn the fucking matrix inversion bro wtf are you trying to code dumm fuck
+	CMyMatrix invers_2x2();
 	
 	void print();
 };

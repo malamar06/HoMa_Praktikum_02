@@ -3,6 +3,21 @@
 #include "CMyMatrix.h"
 #include "CMyVektor.h"
 
+void CMyMatrix::pushLinie(std::vector<double> newmatrixlinie)//um eine leere matrix einzufullen
+{
+	if (spalte != 0)
+	{
+		assert(newmatrixlinie.size() == spalte);
+	}
+	else
+	{
+		spalte = newmatrixlinie.size();
+	}
+	matrix.push_back(newmatrixlinie);
+	linie++;
+	return;
+}
+
 std::vector<double> CMyMatrix::operator[](int pos)
 {
 	return matrix[pos];
@@ -82,6 +97,29 @@ void CMyMatrix::print()
 		for (int j = 0; j < spalte; j++)
 		{
 			std::cout << matrix[i][j] << " ";
+		}
+		std::cout << "|\n";
+	}
+}
+
+void CMyMatrix::schoen_print()
+{
+	std::cout.precision(5);
+	for (int i = 0; i < linie; i++)
+	{
+		std::cout << "| ";
+		for (int j = 0; j < spalte; j++)
+		{
+			std::cout.width(7);
+			std::cout << matrix[i][j];
+			if (j +1 == spalte)//if die lätzte spalte
+			{
+				std::cout << "  ";
+			}
+			else
+			{
+				std::cout << "; ";
+			}
 		}
 		std::cout << "|\n";
 	}
