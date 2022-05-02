@@ -11,7 +11,8 @@ int main()
 
 	newtonVerfahren2dim(control, testFunktion6);
 	
-
+	//CMyVektor control2(1, 2, 0, 3);
+	//jacobi(control2 ,testFunktion3).schoen_print();
 
 	return 0;
 } 
