@@ -20,7 +20,7 @@ CMyVektor operator - (CMyVektor a, CMyVektor b);
 
 void G_verfahren_mini(CMyVektor x, double (*funktion)(CMyVektor y), double lambda);
 
-CMyVektor testFunktion3(double x1, double x2, double x3, double x4);
+CMyVektor testFunktion3(CMyVektor x);
 
 CMyVektor operator*(CMyMatrix A, CMyVektor B);
 

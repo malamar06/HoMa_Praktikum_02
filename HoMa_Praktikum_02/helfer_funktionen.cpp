@@ -12,7 +12,7 @@ CMyVektor testFunktion6(CMyVektor x)//f(x, y) = { x^3*y^3 - 2y ; x - 2 } Praktik
 {
 	CMyVektor rErgebnis(0, 0);
 	rErgebnis.set_vektor_werte(0, x[0] * x[0] * x[0] * x[1] * x[1] * x[1] - 2 * x[1]); // x^3*y^3 - 2y
-	rErgebnis.set_vektor_werte(1, x[0] - 2);
+	rErgebnis.set_vektor_werte(1, x[0] - 2);// x - 2
 	return rErgebnis;
 }
 
@@ -31,7 +31,7 @@ CMyVektor newtonVerfahren2dim(CMyVektor startpunkt, CMyVektor (*funktion)(CMyVek
 		CMyVektor aktuelfunktionx = funktion(aktuelpunkt);
 		double aktuel_lenght = funktion(aktuelpunkt).lenght();
 		
-		if (aktuel_lenght < 0.00001)//Ist es genug Nah?
+		if (aktuel_lenght < 0.00001)//Ist es genug Nah? Programm Abbruch bedingung
 		{
 			cout << "====================== MAGIC ======================" << endl;
 			cout << "Ende wegen ||f(x)|| < 10^-5 bei" << endl;
@@ -43,6 +43,7 @@ CMyVektor newtonVerfahren2dim(CMyVektor startpunkt, CMyVektor (*funktion)(CMyVek
 			return aktuelpunkt;
 		}
 		
+
 		cout << "====================== Schritt " << schritt << " ======================" << endl << endl;
 		cout << "x = ";
 		aktuelpunkt.print();
@@ -52,12 +53,14 @@ CMyVektor newtonVerfahren2dim(CMyVektor startpunkt, CMyVektor (*funktion)(CMyVek
 		aktuelJacobi.schoen_print();
 		cout << endl << "[f'(x)]^(-1) = Jacobi Matrix Inverse " << endl;
 		JacobiInverse.schoen_print();
-		deltaX = -1 * ( JacobiInverse * aktuelfunktionx);// DeltaX = -f(x) * gradf(x)^-1
+
+		deltaX = -1 * ( JacobiInverse * aktuelfunktionx);// DeltaX = -f(x) * gradf(x)^-1 newtonverfahren formel
+
 		cout << endl << "delta x = ";
 		deltaX.print();
 		cout << "||f(x)|| = " << aktuel_lenght << endl << endl;
 		
-		aktuelpunkt = aktuelpunkt + deltaX;
+		aktuelpunkt = aktuelpunkt + deltaX; //x1 = x0 + dx Das Verfahren
 
 
 	}
@@ -71,7 +74,7 @@ CMyMatrix jacobi(CMyVektor x, CMyVektor(*funktion)(CMyVektor x))
 	int rMatrixLinie = funk_X_erg_vektor.get_dim();//m
 	int rMatrixSpalte = x.get_dim();//n
 	double h = 0.0001;
-	CMyMatrix rMatrix;// return matrix initilisieren
+	CMyMatrix rMatrix;// return matrix deklarieren
 	for (int i = 0; i < rMatrixLinie; i++)//mutter schleife fur matrix linie 
 	{
 		vector<double> jacobiLinie;//transporter vektor um das Matrix einzubauen
@@ -89,7 +92,7 @@ CMyMatrix jacobi(CMyVektor x, CMyVektor(*funktion)(CMyVektor x))
 	return rMatrix;
 }
 
-double testFunktion5(CMyVektor x)
+double testFunktion5(CMyVektor x)// f(x) = 2x^2 -2xy + y^2 + z^2 -2x -4z;
 {
 	assert(x.get_dim() == 3);
 	double rErgebnis = 0;
@@ -102,7 +105,7 @@ double testFunktion5(CMyVektor x)
 	return rErgebnis;
 }
 
-double testFunktion4(CMyVektor x)
+double testFunktion4(CMyVektor x)//x^4 + 2y^2 - 4xy;
 {
 	assert(x.get_dim() == 2);
 	double rErgebnis = 0;
@@ -234,12 +237,13 @@ void G_verfahren_mini(CMyVektor x, double (*funktion)(CMyVektor y), double lambd
 }
 
 
-CMyVektor testFunktion3(double x1, double x2, double x3, double x4)
+CMyVektor testFunktion3(CMyVektor x) //Prak. Aufgabe 2. 
 {
+	assert(x.get_dim() == 4);
 	CMyVektor rErgebnis;
-	rErgebnis.manual_push(x1 * x2 * exp(x3));
-	rErgebnis.manual_push(x2 * x3 * x4);
-	rErgebnis.manual_push(x4);
+	rErgebnis.manual_push(x[0] * x[1] * exp(x[2]));
+	rErgebnis.manual_push(x[1] * x[2] * x[3]);
+	rErgebnis.manual_push(x[3]);
 	return rErgebnis;
 }
 
