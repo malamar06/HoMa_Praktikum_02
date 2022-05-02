@@ -75,10 +75,7 @@ CMyMatrix CMyMatrix::invers_2x2()
 {
 	//Inverse Formel: Matrix(abcd)^-1 = (1/ad - bc) * Matrix(d-b-ca)
 	//hoeverszahl = 1 / (x11*x22 - x12*x21) 
-	if (linie != 2 || spalte != 2)
-	{
-		assert("Matrix ist nicht 2x2");
-	}
+	assert(linie == 2 || spalte == 2);
 	//x11(a)=matrix[0][0] x12(b) = matrix[0][1] x21(c)=matrix[1][0] x22(d)=matrix[1][1]
 	double hoeverszahl = 1 / (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]);
 	std::vector<double> matrixWerte;
